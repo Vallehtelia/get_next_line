@@ -15,7 +15,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <stdio.h> //debug
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1000
@@ -29,5 +28,6 @@ size_t	strlen(const char *s);
 char	*fetch_line(char *left_str);
 char	*new_left_str(char *line);
 int		line_length(char *left_str);
+char	*ft_free(char **dump);
 
 #endif

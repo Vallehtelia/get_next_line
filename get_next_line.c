@@ -19,19 +19,13 @@ char	*get_next_line(int fd)
 	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
-	{
-		free(left_str);
-		left_str = NULL;
-		return (NULL);
-	}
+		return (ft_free(&left_str));
 	left_str = read_to_left_str(fd, left_str);
-	if (!left_str || !*left_str)
-	{
-		free(left_str);
-		left_str = NULL;
+	if (!left_str)
 		return (NULL);
-	}
 	line = fetch_line(left_str);
+	if (!line)
+		return (ft_free(&left_str));
 	temp = new_left_str(left_str);
 	if (left_str != temp)
 	{
@@ -47,15 +41,11 @@ char	*read_to_left_str(int fd, char *left_str)
 	char	*buf;
 	int		rd_bytes;
 
-	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
-	{
-		free(buf);
-		buf = NULL;
-		return (NULL);
-	}
+		return (ft_free(&left_str));
 	rd_bytes = 1;
-	while (!is_newline(left_str) && rd_bytes != 0)
+	while (is_newline(left_str) == NULL && rd_bytes != 0)
 	{
 		rd_bytes = read(fd, buf, BUFFER_SIZE);
 		if (rd_bytes < 0)
@@ -69,11 +59,7 @@ char	*read_to_left_str(int fd, char *left_str)
 	}
 	free(buf);
 	if (rd_bytes == 0 && (!left_str || !*left_str))
-	{
-		free(left_str);
-		left_str = NULL;
-		return (NULL);
-	}
+		return (ft_free(&left_str));
 	return (left_str);
 }
 
@@ -90,4 +76,11 @@ int	line_length(char *left_str)
 		return (len + 1);
 	else
 		return (len);
+}
+
+char	*ft_free(char **dump)
+{
+	free(*dump);
+	*dump = NULL;
+	return (NULL);
 }

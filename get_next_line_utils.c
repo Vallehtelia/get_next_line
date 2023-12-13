@@ -28,16 +28,13 @@ size_t	strlen(const char *s)
 
 char	*is_newline(const char *s)
 {
-	int	i;
-
-	i = 0;
 	if (s == NULL)
 		return (NULL);
-	while (s[i] != '\0')
+	while (*s != '\0')
 	{
-		if (s[i] == '\n')
-			return ((char *)&s[i]);
-		i++;
+		if (*s == '\n')
+			return ((char *)s);
+		s++;
 	}
 	return (NULL);
 }
@@ -59,13 +56,7 @@ char	*strjoin(char *left_str, char *buff)
 	}
 	str = malloc(sizeof(char) * ((strlen(left_str) + (strlen(buff)) + 1)));
 	if (str == NULL)
-	{
-		free(str);
-		str = NULL;
-		free(left_str);
-		left_str = NULL;
-		return (NULL);
-	}
+		return (ft_free(&left_str));
 	i = -1;
 	j = 0;
 	while (left_str && left_str[++i] != '\0')
@@ -74,7 +65,6 @@ char	*strjoin(char *left_str, char *buff)
 		str[i++] = buff[j++];
 	str[i] = '\0';
 	free(left_str);
-	left_str = NULL;
 	return (str);
 }
 
@@ -88,13 +78,9 @@ char	*fetch_line(char *left_str)
 	if (left_str == NULL)
 		return (NULL);
 	line_l = line_length(left_str);
-	str = (char *)malloc(sizeof(char) * (line_l + 1));
+	str = (char *)malloc(line_l + 1);
 	if (str == NULL)
-	{
-		free(str);
-		str = NULL;
 		return (NULL);
-	}
 	i = 0;
 	while (left_str[i] && left_str[i] != '\n')
 	{
@@ -112,6 +98,7 @@ char	*fetch_line(char *left_str)
 
 char	*new_left_str(char *left_str)
 {
+	int		remaining_len;
 	int		i;
 	int		j;
 	char	*str;
@@ -123,13 +110,10 @@ char	*new_left_str(char *left_str)
 	{
 		return (NULL);
 	}
-	str = (char *)malloc(sizeof(char) * (strlen(left_str) - i + 1));
+	remaining_len = strlen(left_str) - i;
+	str = (char *)malloc(remaining_len + 1);
 	if (str == NULL)
-	{
-		free(str);
-		str = NULL;
 		return (NULL);
-	}
 	i++;
 	j = 0;
 	while (left_str[i])
